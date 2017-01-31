@@ -101,14 +101,13 @@ unused_fd() {
             version_Mm="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" \
             version_M="${BASH_REMATCH[1]}"
         local paths=( $(printf "${COMMON_DIR}/${1}-bv%s.sh\n" "${version_Mmp}" "${version_Mm}" "${version_M}") "${COMMON_DIR}/${1}.sh" )
+        local path
         for path in "${paths[@]}"; do
             if [ -f "$path" ] && [ -r "$path" ]; then
                 echo -n "$path"
                 return 0
             fi
         done
-
-        echo "${1}.sh not found (path: ${path})" 1>&2
         return 1
     }
 
@@ -117,11 +116,26 @@ unused_fd() {
 
     enable_bash_debug
 
-    # Load any common sh files given as args
-    for ((i=1; i<=$#; ++i)); do
-        sh_path="$( locate_common_script "${!i}" )" ||
-            exit 1
+    module_paths=()
 
-        . "$sh_path"
+    # Find files to load for any common sh files given as args
+    for ((i=1; i<=$#; ++i)); do
+        sh_path="$( locate_common_script "${!i}" )" || {
+            echo "Could not find module: ${!i}"
+            exit 1
+        }
+        if pre_path="$( locate_common_script "${!i}-pre" )"; then
+            module_paths+=("$pre_path")
+        fi
+        module_paths+=( "$sh_path" )
+        if post_path="$( locate_common_script "${!i}-post" )"; then
+            module_paths+=("$post_path")
+        fi
+    done
+
+    # once all of them are found, load them
+    for path in "${module_paths[@]}"; do
+        echo "Include $path"
+        . "$path"
     done
 }

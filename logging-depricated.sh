@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# DEPRICATED: Only to maintain compatibility with older scripts
+
+# These dependencies are required by this file
+#  - logging
+
 # Log warnings
 warn() {
     log warning "$@"
