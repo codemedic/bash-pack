@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "${BASH_VERSION+Defined?}" ]; then
+    echo "bash-common: No shell interpreter other than Bash is supported"
+    exit 1
+fi
+
 # enable / disable bash-debug
 enable_bash_debug() {
     [ "${bash_debug:-0}" = 0 ] ||
