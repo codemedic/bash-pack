@@ -2,7 +2,7 @@
 
 set -eu
 
-. "$(dirname "$0")/common.sh" posix-mode logging
+. "$(dirname "$0")/common.sh" logging
 
 usage_help() {
     [ -z "$*" ] || error "$*"$'\n'

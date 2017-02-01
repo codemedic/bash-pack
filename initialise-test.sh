@@ -12,16 +12,14 @@ ok_or_failed() {
 }
 trap ok_or_failed EXIT
 
+fail() { false; }
+success() { true; }
+
 : "${sut_script:="$(basename "$0" | sed 's/^test_//g')"}"
 echo -n "Testing ${sut_script} ... "
 
 : "${script:=$(dirname "$0")/../${sut_script}}"
-[ "${source_sut_script:-0}" = 1 ] && [ -r "$script" ] &&
-    {
-        . "$script"
-        return
-    }
-
-[ -x "${script}" ] && return
-
-echo -n "SUT ($script) not found ... " && false
+[ -r "$script" ] || {
+    echo -n "SUT ($script) not found ... "
+    false
+}

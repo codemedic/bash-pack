@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# DEPRICATED: Only to maintain compatibility with older scripts
+#require logging
 
-# These dependencies are required by this file
-#  - logging
+# DEPRICATED: Only to maintain compatibility with older scripts
 
 # Log warnings
 warn() {

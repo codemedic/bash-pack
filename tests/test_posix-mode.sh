@@ -2,8 +2,7 @@
 
 set -eu
 
-source_sut_script=1 \
-    . "$(dirname "$0")/../initialise-test.sh"
+. "$(dirname "$0")/../common.sh" initialise-test posix-mode
 
 # Provide stubs that can be used for testing
 warn() {
@@ -17,16 +16,16 @@ bail() {
 
 # turn it on and check
 set -o posix
-posix_mode_is_on || false
+posix_mode_is_on || fail
 
 # turn it off and check
 set +o posix
-posix_mode_is_on || true
+posix_mode_is_on || success
 
 # turn it on, then disable and then check
 set -o posix
 posix_mode_disable &>/dev/null
-posix_mode_is_on || true
+posix_mode_is_on || success
 
 # now that it is off, make sure no warning comes out
 [ '' = "$(posix_mode_warn_if_on message 2>&1)" ]
@@ -36,5 +35,5 @@ set -o posix
 [[ "$(posix_mode_warn_if_on message 2>&1)" = *message ]]
 
 # warn and bail
-( bail=1 posix_mode_warn_if_on &>/dev/null ) || true
+( bail=1 posix_mode_warn_if_on &>/dev/null ) || success
 [[ "$(bail=1 posix_mode_warn_if_on message 2>&1)" = *message ]]

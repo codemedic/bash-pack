@@ -3,8 +3,6 @@
 set -eu
 
 . "$(dirname "$0")/../common.sh" \
-    posix-mode \
-    logging \
     logging-depricated
 
 log_initialise

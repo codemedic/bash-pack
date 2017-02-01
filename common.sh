@@ -90,12 +90,21 @@ unused_fd() {
     done
 }
 
+in_array() {
+    for ((i=2; i<=$#; ++i)); do
+        [ "${!i}" != "$1" ] || return 0
+    done
+    return 1
+}
+
 # initialise and load specified scripts; fenced by __bash_common_loaded
 [ -n "${__bash_common_loaded:-}" ] || {
     __bash_common_loaded=1
 
-    # load scripts specific to a bash version
-    locate_common_script() {
+    modules_loading=(common)
+
+    # Locate components of a module (also the bash version is taken into account)
+    common_module_locate_scripts() {
         [[ ${BASH_VERSION} =~ ^([0-9]+)\.([0-9]+)\.([0-9]+) ]]
         local version_Mmp="${BASH_REMATCH[0]}" \
             version_Mm="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" \
@@ -111,31 +120,61 @@ unused_fd() {
         return 1
     }
 
+    common_module_get_new_required_modules() {
+        local module all_new_required_modules new_required_modules=()
+        all_new_required_modules=( $(sed -nr 's/.*^#require (.*)$.*/\1/p' "$@") )
+        for module in "${all_new_required_modules[@]+"${all_new_required_modules[@]}"}"; do
+            in_array "$module" "${modules_loading[@]}" "${new_required_modules[@]+"${new_required_modules[@]}"}" ||
+                new_required_modules+=("$module")
+        done
+        printf '%s\n' "${new_required_modules[@]+"${new_required_modules[@]}"}"
+    }
+
+    common_module_load_by_name() {
+        local path pre_path post_path this_module_paths=()
+
+        if in_array "$1" "${modules_loading[@]}"; then
+            return 0
+        fi
+
+        if ! path="$( common_module_locate_scripts "${1}" )"; then
+            echo "Could not find module: ${1}"
+            exit 1
+        fi
+
+        # locate and load the module
+        modules_loading+=("${1}")
+        if pre_path="$( common_module_locate_scripts "${1}-pre" )"; then
+            this_module_paths+=("$pre_path")
+        fi
+        this_module_paths+=( "$path" )
+        if post_path="$( common_module_locate_scripts "${1}-post" )"; then
+            this_module_paths+=("$post_path")
+        fi
+
+        # look for direct deps
+        local required_modules=( $(common_module_get_new_required_modules "${this_module_paths[@]}") )
+        local module
+        for module in "${required_modules[@]+"${required_modules[@]}"}"; do
+            common_module_load_by_name "$module"
+        done
+
+        printf '%s\n' "${this_module_paths[@]}"
+    }
+
     COMMON_DIR="${BASH_SOURCE[0]%/*}"
     [ -d "$COMMON_DIR" ] || COMMON_DIR=.
 
     enable_bash_debug
 
-    module_paths=()
-
-    # Find files to load for any common sh files given as args
+    scripts_loading=()
+    # Find files to load for any module-names given as args
     for ((i=1; i<=$#; ++i)); do
-        sh_path="$( locate_common_script "${!i}" )" || {
-            echo "Could not find module: ${!i}"
-            exit 1
-        }
-        if pre_path="$( locate_common_script "${!i}-pre" )"; then
-            module_paths+=("$pre_path")
-        fi
-        module_paths+=( "$sh_path" )
-        if post_path="$( locate_common_script "${!i}-post" )"; then
-            module_paths+=("$post_path")
-        fi
+        scripts_loading+=($(common_module_load_by_name "${!i}"))
     done
 
     # once all of them are found, load them
-    for path in "${module_paths[@]}"; do
-        echo "Include $path"
-        . "$path"
+    for script in "${scripts_loading[@]}"; do
+        . "$script"
     done
 }
