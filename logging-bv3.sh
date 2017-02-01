@@ -32,7 +32,7 @@ _log_level_fd_new() {
 }
 
 log_level_initialise() {
-    local level level_name fd log_fd
+    local level level_name log_fd
 
     level_name="$1"; shift
 
@@ -73,8 +73,8 @@ log_initialise() {
     fi
 
     # duplicate the three FDs
-    o_stdin="$(unused_fd)"
-    eval "exec ${o_stdin}<&0"
+    # o_stdin="$(unused_fd)"
+    # eval "exec ${o_stdin}<&0"
     o_stdout="$(unused_fd)"
     eval "exec ${o_stdout}>&1"
     o_stderr="$(unused_fd)"
@@ -97,6 +97,8 @@ log_initialise() {
     log_error_fd="${log}"
     : "${log_info_fd:="${log}"}"
 
+    # log_level_names variable comes from logging-pre
+    # shellcheck disable=SC2154
     for i in "${log_level_names[@]}"; do
         log_level_initialise "$i"
     done

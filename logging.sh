@@ -24,6 +24,7 @@ log_level_initialise() {
         else
             log_fd="${log_error_fd}"
         fi
+        # shellcheck disable=SC2154
         exec {fd}> >(out_fd="$log_fd" prefix_filter "$(to_upper "${log_level_names[$level]}"): ")
     fi
 
@@ -56,7 +57,7 @@ log_initialise() {
     fi
 
     # duplicate the three FDs
-    exec {o_stdin}<&0
+    # exec {o_stdin}<&0
     exec {o_stdout}>&1
     exec {o_stderr}>&2
     exec {o_null}>/dev/null

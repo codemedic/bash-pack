@@ -4,6 +4,7 @@ set -e
 [ "${bash_debug:-0}" = 0 ] || set -x
 
 ok_or_failed() {
+    # shellcheck disable=SC2181
     if [ $? -eq 0 ]; then
         echo OK
     else

@@ -67,6 +67,7 @@ nsvar_import_variables() {
 
     local ns
     # prefix variables found from the file
+    # shellcheck disable=SC1090
     . <(sed "s/^/${ns}_/g" "$1")
 }
 

@@ -6,6 +6,7 @@ log() {
     local fd; fd="$(log_level_get_fd "$1")"; shift
 
     # log only if fd is NOT same as o_null
+    # shellcheck disable=SC2154
     if [ "$fd" != "$o_null" ]; then
         echo "$*" >&"${fd}"
     fi

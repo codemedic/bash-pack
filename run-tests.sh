@@ -2,6 +2,7 @@
 
 set -eu
 
+# shellcheck disable=SC1090
 . "$(dirname "$0")/common.sh" logging
 
 usage_help() {

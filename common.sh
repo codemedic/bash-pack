@@ -180,6 +180,7 @@ in_array() {
 
     # once all of them are found, load them
     for script in "${scripts_loading[@]}"; do
+        # shellcheck disable=SC1090
         . "$script"
     done
 }
