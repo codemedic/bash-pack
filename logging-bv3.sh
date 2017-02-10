@@ -23,10 +23,18 @@ _log_level_fd_new() {
             new_fd="${!fd_var}"
         }
 
+        local prefixes=()
+        # set the common prefix if any
+        # shellcheck disable=SC2154
+        if [ ! -z "${log_common_prefix+XX}" ]; then
+            prefixes+=( "$log_common_prefix" )
+        fi
+        prefixes+=( "$(to_upper "$level_name")" )
+
         # if new_fd not set yet, get an unused fd
         : "${new_fd:="$(unused_fd)"}"
 
-        eval "exec ${new_fd}> >(out_fd=${target_fd} prefix_filter '$(to_upper "$level_name"): ')"
+        eval "exec ${new_fd}> >(out_fd=${target_fd} prefix_filter '$(array_join ': ' "${prefixes[@]}"): ')"
     fi
     eval "${fd_var}=${new_fd}"
 }

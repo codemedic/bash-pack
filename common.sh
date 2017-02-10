@@ -102,6 +102,26 @@ in_array() {
     return 1
 }
 
+array_join() {
+    local glue="$1"; shift;
+    if [ $# -gt 0 ]; then
+        echo -n "$1"; shift
+        printf "${glue}%s" "$@"
+    fi
+}
+
+get_named_param() {
+    local variable_name i
+    variable_name="$1"; shift
+    for ((i=1; i<=$#; ++i)); do
+        if [[ "${!i}" == "${variable_name}"=* ]]; then
+            printf '%s' "${!i:$((${#variable_name}+1))}"
+            return 0
+        fi
+    done
+    return 1
+}
+
 # initialise and load specified scripts; fenced by __bash_common_loaded
 [ -n "${__bash_common_loaded:-}" ] || {
     __bash_common_loaded=1
@@ -179,7 +199,7 @@ in_array() {
     done
 
     # once all of them are found, load them
-    for script in "${scripts_loading[@]}"; do
+    for script in "${scripts_loading[@]+"${scripts_loading[@]}"}"; do
         # shellcheck disable=SC1090
         . "$script"
     done

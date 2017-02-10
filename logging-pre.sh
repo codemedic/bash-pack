@@ -33,3 +33,7 @@ log_set_level() {
         exit 1
     }
 }
+
+# Is common log line prefix (application name and/or pid) defined?
+# log_common_prefix=app-name
+# log_common_prefix="app-name[$$]"

@@ -17,7 +17,7 @@ Usage:
     run-tests.sh [--directory=<TestsDirectory>] [--continue-on-failure]
 
 Options:
-    -d <TestsDirectory>, --directory=<TestsDirectory
+    -d <TestsDirectory>, --directory=<TestsDirectory>
         Run all tests from the specified directory; if not specified, a directory called "tests" in the current
         directory will be used.
 

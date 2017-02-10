@@ -24,8 +24,16 @@ log_level_initialise() {
         else
             log_fd="${log_error_fd}"
         fi
+
+        local prefixes=()
+        # set the common prefix if any
+        if [[ -v log_common_prefix ]]; then
+            prefixes+=( "$log_common_prefix" )
+        fi
+        prefixes+=( "$(to_upper "${log_level_names[$level]}")" )
+
         # shellcheck disable=SC2154
-        exec {fd}> >(out_fd="$log_fd" prefix_filter "$(to_upper "${log_level_names[$level]}"): ")
+        exec {fd}> >(out_fd="$log_fd" prefix_filter "$(array_join ': ' "${prefixes[@]}"): ")
     fi
 
     log_fds[$level]="${fd:-"${o_null:-2}"}"
