@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #require posix-mode
+#require array
 
 # some of the bash features not available in POSIX mode, is needed here
 posix_mode_disable

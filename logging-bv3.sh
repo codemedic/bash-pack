@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#require array
+
 _log_level_fd_var() {
     echo -n "log_fds_${1}"
 }

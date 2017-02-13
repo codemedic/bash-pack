@@ -15,118 +15,18 @@ is_bash_version() {
     (( ${BASH_VERSION%%.*} >= "$1" ))
 }
 
-to_lower() {
-    if is_bash_version 4; then
-        local str="$*"
-        echo "${str,,}"
-    else
-        echo "$*" | tr '[:upper:]' '[:lower:]'
-    fi
-}
-
-to_upper() {
-    if is_bash_version 4; then
-        local str="$*"
-        echo "${str^^}"
-    else
-        echo "$*" | tr '[:lower:]' '[:upper:]'
-    fi
-}
-
-prefix_filter() {
-    local prefix line
-    [ $# -eq 0 ] || prefix="$*"
-    while true; do
-        if IFS= read -r line; then
-            echo "${prefix}${line}" >&"${out_fd:-1}";
-        else
-            break;
-        fi;
-    done
-}
-
-pipe_to_fd() {
-    # make sure fds are valid
-    for ((i=1; i<=$#; ++i)); do
-        { >&"${!i}"; } 2> /dev/null ||
-            bail "tee_fd: Invalid fd (${!i}) given"
-    done
-
-    while true; do
-        if IFS= read -r line; then
-            for ((i=1; i<=$#; ++i)); do
-                echo "${line}" >&"${!i}";
-            done
-            [ "${tee:-0}" = 0 ] ||
-                echo "${line}"
-        else
-            break;
-        fi;
-    done
-}
-
-pipe_to_file() {
-    while true; do
-        if IFS= read -r line; then
-            for ((i=1; i<=$#; ++i)); do
-                echo "${line}" >>"${!i}";
-            done
-            [ "${tee:-0}" = 0 ] ||
-                echo "${line}"
-        else
-            break;
-        fi;
-    done
-}
-
-is_fd() {
-    [[ "$1" =~ ^[0-9]+$ ]] && {
-        { : >&"$1"; } 2> /dev/null
-    }
-}
-
-unused_fd() {
-    : "${__max_fd:="$(ulimit -n)"}"
-    for ((i=0; i<"$__max_fd"; ++i)); do
-        is_fd "$i" || {
-            echo -n "$i"
-            break;
-        }
-    done
-}
-
-in_array() {
-    for ((i=2; i<=$#; ++i)); do
-        [ "${!i}" != "$1" ] || return 0
-    done
-    return 1
-}
-
-array_join() {
-    local glue="$1"; shift;
-    if [ $# -gt 0 ]; then
-        echo -n "$1"; shift
-        printf "${glue}%s" "$@"
-    fi
-}
-
-get_named_param() {
-    local variable_name i
-    variable_name="$1"; shift
-    for ((i=1; i<=$#; ++i)); do
-        if [[ "${!i}" == "${variable_name}"=* ]]; then
-            printf '%s' "${!i:$((${#variable_name}+1))}"
-            return 0
-        fi
-    done
-    return 1
-}
-
 # initialise and load specified scripts; fenced by __bash_common_loaded
 [ -n "${__bash_common_loaded:-}" ] || {
     __bash_common_loaded=1
 
     modules_loading=(common)
+
+    in_array() {
+        for ((i=2; i<=$#; ++i)); do
+            [ "${!i}" != "$1" ] || return 0
+        done
+        return 1
+    }
 
     # Locate components of a module (also the bash version is taken into account)
     common_module_locate_scripts() {

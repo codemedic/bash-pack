@@ -1,6 +1,8 @@
 #!/bin/bash
 
 #require posix-mode
+#require file
+#require string
 
 # some of the bash features not available in POSIX mode, is needed here
 posix_mode_disable
