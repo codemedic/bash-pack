@@ -55,9 +55,20 @@ enable_bash_debug
 log_initialise
 
 : "${tests_directory:="$(pwd)/tests"}"
+if [ ! -d "$tests_directory" ]; then
+    echo "ERROR: tests_directory: $tests_directory - not found"
+    exit 1
+fi
+
 log info "Running tests from $tests_directory"
 
-for test_script in "$tests_directory/"test_*.sh; do
+# XXX be aware that the below formula is not bullet proof WRT space character in file/dir names
+test_scripts=( $(find "$tests_directory/" -maxdepth 1 -type f -name 'test_*.sh') )
+[ ${#test_scripts[@]} -gt 0 ] || {
+    echo "ERROR: No test scripts found in $tests_directory/"
+    exit 1
+}
+for test_script in "${test_scripts[@]}"; do
     "$test_script" || {
         [ "${continue_on_failure:-0}" = 1 ] ||
             exit 1
