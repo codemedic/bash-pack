@@ -8,7 +8,21 @@ A set of curated bash formula, ready to consume. It provides a simplistic module
 
 Below are the current set of modules provided. For information on functions provided by each of them, please have a look inside.
 
-*NOTE*: The function documentation is similar to what is [prescribed by google](https://google.github.io/styleguide/shell.xml?showone=Function_Comments#Function_Comments).
+> *NOTE*: The function documentation is similar to what is [prescribed by google](https://google.github.io/styleguide/shell.xml?showone=Function_Comments#Function_Comments), but in a minimised form.
+>
+> *Example:*
+> ```
+> # Check major version of bash to be at least a given number
+> #
+> # Arguments:
+> #   1. major_version version to check against
+> #
+> # Returns:
+> #   0 if greater than or equal to major_version, otherwise 1
+> is_bash_version() {
+> ...
+> }
+> ```
 
  * [array](array.sh)
  * [logging](logging.sh)
