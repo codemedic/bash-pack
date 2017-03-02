@@ -5,12 +5,22 @@ if [ -z "${BASH_VERSION+Defined?}" ]; then
     exit 1
 fi
 
-# enable / disable bash-debug
+# enable / disable bash-debug based on environment variable.
+#
+# Globals:
+#   bash_debug set to 1 to enable xtrace
 enable_bash_debug() {
     [ "${bash_debug:-0}" = 0 ] ||
         set -x
 }
 
+# Check major version of bash to be at least a given number
+#
+# Arguments:
+#   1. major_version version to check against
+#
+# Returns:
+#   0 if greater than or equal to major_version, otherwise 1
 is_bash_version() {
     (( ${BASH_VERSION%%.*} >= "$1" ))
 }
