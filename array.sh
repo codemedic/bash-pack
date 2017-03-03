@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Lookup an element in an array
 #
 # It does not work on the array directly, but provides a mechanism

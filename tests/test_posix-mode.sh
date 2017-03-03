@@ -2,7 +2,8 @@
 
 set -eu
 
-. "$(dirname "$0")/../common.sh" initialise-test posix-mode
+# shellcheck disable=SC1090
+. "$(dirname "$0")/../init.sh" initialise-test posix-mode
 
 # Provide stubs that can be used for testing
 warn() {

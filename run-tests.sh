@@ -3,7 +3,7 @@
 set -eu
 
 # shellcheck disable=SC1090
-. "$(dirname "$0")/common.sh" logging
+. "$(dirname "$0")/init.sh" logging
 
 usage_help() {
     [ -z "$*" ] || error "$*"$'\n'

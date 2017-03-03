@@ -1,3 +1,5 @@
+#!/bin/bash
+
 get_named_param() {
     local variable_name i
     variable_name="$1"; shift

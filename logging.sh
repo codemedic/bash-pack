@@ -28,6 +28,7 @@ log_level_initialise() {
 
         local prefixes=()
         # set the common prefix if any
+        # shellcheck disable=SC2154
         if [[ -v log_common_prefix ]]; then
             prefixes+=( "$log_common_prefix" )
         fi

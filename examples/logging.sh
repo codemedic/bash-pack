@@ -2,7 +2,8 @@
 
 set -eu
 
-. "$(dirname "$0")/../common.sh" \
+# shellcheck disable=SC1090
+. "$(dirname "$0")/../init.sh" \
     logging-depricated
 
 log_initialise

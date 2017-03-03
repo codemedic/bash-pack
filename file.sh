@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pipe_to_fd() {
     # make sure fds are valid
     for ((i=1; i<=$#; ++i)); do

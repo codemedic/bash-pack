@@ -2,7 +2,8 @@
 
 set -eu
 
-. "$(dirname "$0")/../common.sh" initialise-test semver
+# shellcheck disable=SC1090
+. "$(dirname "$0")/../init.sh" initialise-test semver
 
 semver_bump || success
 semver_bump not-semver || success

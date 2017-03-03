@@ -34,7 +34,7 @@ Below are the current set of modules provided. For information on functions prov
  * [validate](validate.sh)
  
 #### Other
- * [common](common.sh)
+ * [init](init.sh)
 
 ## Examples
 
@@ -58,9 +58,9 @@ If you would like your changes to be merged back, please follow the below basic 
    >
    > ```text
    > docker run --rm -it \
-   >     -v $(pwd):/bash-common \
-   >     -w /bash-common \
-   >     centos:5 sh /bash-common/run-tests.sh
+   >     -v $(pwd):/bash-pack \
+   >     -w /bash-pack \
+   >     centos:5 sh /bash-pack/run-tests.sh
    > ```
    
    

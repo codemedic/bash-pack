@@ -2,8 +2,10 @@
 
 set -eu
 
-. "$(dirname "$0")/../common.sh" initialise-test logging
+# shellcheck disable=SC1090
+. "$(dirname "$0")/../init.sh" initialise-test logging
 
+# shellcheck disable=SC2034
 log_common_prefix=XXX
 
 log_initialise

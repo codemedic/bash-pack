@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # semver - bump version component
 # Usage:
 #   semver_bump <Version> <Component> <Increment>

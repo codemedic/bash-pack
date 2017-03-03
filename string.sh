@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # to lower case
 to_lower() {
     if is_bash_version 4; then
