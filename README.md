@@ -1,4 +1,4 @@
-# Bash Common
+# Bash Pack
 
 > **Current status**: Work in progress; most of the functionality is tested and safe to use. Lacks documentation.
 
