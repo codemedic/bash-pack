@@ -57,7 +57,10 @@ If you would like your changes to be merged back, please follow the below basic 
    > A Linux distro version to ship with v3.2 is CentOS 5. You can use a VM or docker to perform these tests. If you choose the latter, the formula to run can be.
    >
    > ```text
-   > docker run -v $(pwd):/bash-common --rm -it -w /bash-common centos:5 sh /bash-common/run-tests.sh
+   > docker run --rm -it \
+   >     -v $(pwd):/bash-common \
+   >     -w /bash-common \
+   >     centos:5 sh /bash-common/run-tests.sh
    > ```
    
    
