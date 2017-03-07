@@ -181,7 +181,7 @@ if [ -z "${__bash_pack_loaded:-}" ]; then
 
     ## start loading scripts
 
-    modules_loading=(init)
+    modules_loading=('bash-pack:init')
 
     if ! declare -p bash_pack_components >/dev/null 2>&1; then
         bash_pack_components=()
@@ -198,7 +198,7 @@ if [ -z "${__bash_pack_loaded:-}" ]; then
     bash_pack_check_components
 
     # Add self to the list of enabled components
-    bash_pack_components=("bash-pack:${BASH_PACK_DIR}")
+    bash_pack_components+=("bash-pack:${BASH_PACK_DIR}")
 
     # set the context for the initial component, which is bash-pack itself
     # this is so that bash-pack modules does not need to specify itself as namespace
