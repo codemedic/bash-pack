@@ -13,6 +13,7 @@
 #   array=(1 2 3 4 5)
 #   in_array 3 "${array[@]}" && echo Found || echo "Not found"
 in_array() {
+    local i
     for ((i=2; i<=$#; ++i)); do
         [ "${!i}" != "$1" ] || return 0
     done
